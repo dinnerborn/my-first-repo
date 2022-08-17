@@ -1,0 +1,76 @@
+int lengh = 100;
+int leftY = 540/2;
+int rightY = 540/2;
+int leftX = 30;
+int rightX = 930;
+int ballX = 960/2;
+int ballY = 540/2;
+int ballSize = 50;
+int dx = 4;
+int dy = 4;
+boolean start = false;
+
+
+void setup() {
+  size(960, 540);
+  background(255);
+  colorMode(RGB, 100, 100, 100);
+  fill(0);
+  textSize(100);
+}
+
+void draw() {
+  //右バーの移動
+  if (keyPressed) {
+    //↑のとき
+    if (keyCode == UP) {
+      rightY = constrain(rightY - 10, lengh/2, height - lengh/2);
+    //↓のとき
+    } else if (keyCode == DOWN) {
+      rightY = constrain(rightY + 10, lengh/2, height - lengh/2);
+    } else if (key == 's') {
+      start = true;
+    }
+  }
+  //左バーの移動
+  leftY = constrain(leftY + mouseY - pmouseY, lengh/2, height - lengh/2);
+  //終了の判定
+  if (ballX - ballSize <= 0) {
+    background(0, 0, 100);
+    fill(0, 0, 100);
+    start = false;
+  }
+  if (ballX + ballSize >= 960) {
+    background(100, 0, 0);
+    fill(100, 0, 0);
+    start = false;
+  }
+  
+  //ボールの移動
+  if (start) {
+    ballX += dx;
+    ballY += dy;
+    //左のバーに当たったとき
+    if ((ballX - ballSize/2 <= leftX && ballX >= leftX)
+    &&(ballY <= leftY + lengh/2 && ballY >= leftY - lengh/2)) {
+      dx = abs(dx);
+    }
+    //右のバーに当たったとき
+    if ((ballX + ballSize/2 >= rightX && ballX <= rightX )
+    &&(ballY <= rightY + lengh/2 && ballY >= rightY - lengh/2)) {
+      dx = abs(dx)*-1;
+    }
+    //上下の壁に当たった時
+    if ((ballY - ballSize/2 <= 0)||(ballY + ballSize/2 >= height)) {
+      dy *= -1;
+    }
+    //バー、ボール、文字の描画
+    background(100);
+    line(rightX, rightY - lengh/2, rightX, rightY + lengh/2);
+    line(leftX, leftY - lengh/2, leftX, leftY + lengh/2);
+    ellipse(ballX, ballY, ballSize, ballSize);
+  }
+if(!start){
+  text("press s to start", 200, 400);
+  }
+}
